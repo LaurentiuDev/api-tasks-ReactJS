@@ -1,6 +1,7 @@
 import React, { Component } from "react";
 import { Link, Redirect } from "react-router-dom";
 import { Button } from 'reactstrap';
+
 export default class About extends Component {
   _logout = () => {
     sessionStorage.removeItem("token");

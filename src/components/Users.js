@@ -20,7 +20,6 @@ export default class Users extends Component {
     
     axios.defaults.headers.common = { Authorization: "Bearer " + token };
 
-    console.log(sessionStorage.getItem("role_id"));
     if (sessionStorage.getItem("token")) {
       await axios
         .get("http://api.tasks.local/v1/admin/users")
@@ -53,14 +52,14 @@ export default class Users extends Component {
             <thead>
               <tr className="thead-light">
                 <th>#</th>
-                <th>User</th>
+                <th>Name</th>
                 <th>Email</th>
                 <th>Role</th>
               </tr>
             </thead>
             <tbody>
-              {users.map((user, i) => (
-                <RowsTable count={i} user={user} />
+              {users.map((user, key) => (
+                <RowsTable count={key} user={user} />
               ))}
             </tbody>
           </table>

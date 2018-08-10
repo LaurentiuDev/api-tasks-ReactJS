@@ -23,7 +23,7 @@ export default class Login extends Component {
         const response = await axios.post('http://api.tasks.local/v1/login', {
             email, password
         });
-        console.log(response);
+       
         if (response && response.data && response.data.data) {
             sessionStorage.setItem('token', response.data.data.token);
     
@@ -49,7 +49,7 @@ export default class Login extends Component {
                     <Form>
                         <Input  type={'text'} name={'email'} value={email} onChange={this._onChange} placeholder="Email"/><br/><br/>
                         <Input  type={'password'} name={'password'} value={password} onChange={this._onChange} placeholder="Password"/><br/> <br/>
-                        <Button color="primary" onClick={this._login}>Login</Button>
+                        <Button color="primary" className="btnLogin" onClick={this._login}>Login</Button>
                     </Form>
                 </div>
                 
