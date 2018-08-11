@@ -44,7 +44,8 @@ export default class Users extends Component {
     }
 
     const { users } = this.state;
-
+   
+    
     return (
       <Fragment>
         <div className="table-responsive">
@@ -58,9 +59,9 @@ export default class Users extends Component {
               </tr>
             </thead>
             <tbody>
-              {users.map((user, key) => (
-                <RowsTable count={key} user={user} />
-              ))}
+              {users.map((user,count) => {
+                return <RowsTable  user={user} key={user.id} {...user} count={count} />
+              })}
             </tbody>
           </table>
         </div>
