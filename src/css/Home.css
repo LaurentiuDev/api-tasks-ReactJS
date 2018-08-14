@@ -1,0 +1,12 @@
+.HomeContent {
+  margin:auto;
+  margin-top:150px;
+  width: 30%;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  height: 200px;
+  line-height: 30px;
+
+}
