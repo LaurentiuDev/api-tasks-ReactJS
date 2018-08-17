@@ -32,7 +32,7 @@ export default class Forgot extends Component {
         const {email} = this.state;
         await axios.post(process.env.REACT_APP_API_URL + 'forgot-password',{email})
         .then(res => {
-            console.log(res);
+           
             if(res.data.errorMessage){
                 this.setState({
                     success:false,

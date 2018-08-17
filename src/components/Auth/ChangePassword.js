@@ -35,7 +35,7 @@ export default class ChangePassword extends Component {
         console.log(code);
         await axios.post(process.env.REACT_APP_API_URL + 'change-password',{email,code,password})
         .then(res => {
-            console.log(res);
+           
             if(res.data.errorMessage){
                 this.setState({
                     success:false,
