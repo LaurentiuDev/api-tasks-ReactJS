@@ -1,3 +1,59 @@
+
 .users-list {
-    margin: 10px 0 20px;
+  margin: 20px 0 20px;
+}
+
+
+.layout .content .btn-success{
+   background: rgb(58, 194, 58);
+   box-shadow: 4px 4px 5px rgba(0, 0, 0, 0.15);
+}
+
+.layout .content .btn-secondary{
+    box-shadow: 4px 4px 5px rgba(0, 0, 0, 0.15);
+    margin-right: 7px;
+ }
+ .layout .content .btn-danger{
+    box-shadow: 4px 4px 5px rgba(0, 0, 0, 0.15);
+  
+ }
+
+.layout .header .btn {
+    box-shadow: 3px 3px 5px rgba(247, 239, 239, 0.15);
+}
+
+table {
+  width: 1100px;
+  border-collapse: collapse;
+  overflow: hidden;
+  box-shadow: 0 0 20px rgba(0, 0, 0, 0.1);
+}
+th,
+td {
+  padding: 17px 37px;
+  background-color: rgba(255, 255, 255, 0.15);
+  color: rgb(12, 11, 11);
+  
+}
+th {
+  text-align: left;
+}
+thead th {
+  background-color: #55608f;
+}
+tbody tr:hover {
+  background-color: rgba(255, 255, 255, 0.3);
+}
+tbody td {
+  position: relative;
+}
+tbody td:hover:before {
+  content: "";
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: -9999px;
+  bottom: -9999px;
+  background-color: rgba(255, 255, 255, 0.2);
+  z-index: -1;
 }

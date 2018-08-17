@@ -3,10 +3,12 @@ import axios from 'axios';
 import UserRow from "./UserRow";
 import Layout from '../Misc/Layout';
 import '../../css/Users.css';
+import PropTypes from 'prop-types';
 
 import {ModalFooter, Button, Modal, ModalHeader, ModalBody, FormGroup, Form, Label, Input} from 'reactstrap';
 
 export default class Users extends Component {
+    
     state = {
         users: [],
         open: false,
@@ -16,6 +18,16 @@ export default class Users extends Component {
         password: '',
         role: '',
         shouldRerender: false
+    };
+    static  propTypes = {
+        users:PropTypes.array,
+        open:PropTypes.bool,
+        id:PropTypes.bool,
+        name:PropTypes.string,
+        email:PropTypes.string,
+        password:PropTypes.string,
+        role:PropTypes.string,
+        shouldRerender:PropTypes.bool,
     };
 
     async componentDidMount() {
@@ -95,12 +107,25 @@ export default class Users extends Component {
         });
     };
 
+    _deleteRow = async (user) => {
+        let res;
+        if(user.id){
+            res = await axios.delete(process.env.REACT_APP_API_URL + `admin/user/${user.id}`);
+        }
+
+        if (res && res.data && res.data.responseType === 'success') {
+            this.setState({
+                shouldRerender: true,
+            });
+        }
+    }
+
     render() {
         const {users, id} = this.state;
-
+       
         return (
             <Layout>
-                <Button color="primary" onClick={this._add}>Add user</Button>
+                <Button  color="success" onClick={this._add}>Add user</Button>
                 <Modal isOpen={this.state.open} toggle={this._toggle}>
                     <ModalHeader toggle={this._toggle}>{id ? 'Edit user' : 'Add user'}</ModalHeader>
                     <ModalBody>
@@ -152,11 +177,23 @@ export default class Users extends Component {
                     </ModalFooter>
                 </Modal>
                 <div className={'users-list'}>
+                <table>
+                    <thead>
+                        <tr>
+                            <th>#</th>
+                            <th>Name</th>
+                            <th>Email</th>
+                            <th>Role</th>
+                            <th>Action</th>
+                        </tr>
+                    </thead>
                     {users && users.map((user, key) => {
-                        return <UserRow key={key} user={user} edit={this._edit}/>
+                        return <UserRow key={key} user={user} edit={this._edit} deleteRow={this._deleteRow}/>
                     })}
+                </table>
                 </div>
             </Layout>
         )
     }
+  
 }

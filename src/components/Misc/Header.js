@@ -1,6 +1,7 @@
 import React, {Component} from 'react';
 import {Redirect} from 'react-router-dom';
 import {Button} from 'reactstrap';
+import '../../css/Header.css';
 
 export default class Header extends Component {
     state = {
@@ -17,7 +18,7 @@ export default class Header extends Component {
 
     render() {
         if (this.state.redirect) {
-            return <Redirect to={'/login'}/>;
+            return <Redirect to={'/'}/>;
         }
 
         return (

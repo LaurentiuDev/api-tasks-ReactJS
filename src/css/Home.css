@@ -8,5 +8,16 @@
   align-items: center;
   height: 200px;
   line-height: 30px;
+  color:white;
+  font-size:140%;
 
+}
+
+.HomeContent .Home-link{
+  color:rgb(99, 230, 235);
+}
+
+.HomeContent .Home-link:hover{
+  text-decoration: none;
+  color:rgb(45, 207, 212);
 }

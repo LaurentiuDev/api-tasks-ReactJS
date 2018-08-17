@@ -6,6 +6,7 @@ import {Redirect} from "react-router-dom";
 import axios from 'axios';
 import qs from 'qs';
 
+
 export default class Layout extends Component {
     render() {
         if (!sessionStorage.getItem('token')) {
@@ -22,13 +23,16 @@ export default class Layout extends Component {
         axios.defaults.headers.common.Authorization = 'Bearer ' + sessionStorage.getItem('token');
 
         return (
-            <Container className={'layout'}>
+            <div className={'layout'}>
                 <Header/>
-                <div className={'content'}>
+                
+                { sessionStorage.getItem('role_id') === '1' ? //Just admin can see users table
+                <Container className={'content'}>
                     {this.props.children}
-                </div>
+                </Container> : null
+                }
                 <Footer/>
-            </Container>
+            </div>
         );
     }
 }

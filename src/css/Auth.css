@@ -1,0 +1,50 @@
+.Login-content {
+    width:33%;
+    margin:auto;
+    margin-top:50px;
+    background:rgba(243, 238, 238, 0.29);
+    padding:47px 40px;
+    padding-top:10px;
+    border-radius: 10px;
+    box-shadow: 4px 4px 8px rgba(51, 50, 50, 0.5);
+    font-family: "Open Sans";
+}
+
+.Login-content .title{
+    text-align: center;
+    font-size:120%;
+    letter-spacing: 2px;
+    color:rgb(32, 31, 31);
+
+}
+
+.Login-content .btn-secondary{
+    margin-left:86%;
+}
+
+body {
+    background-image:url('../images/bg-01.jpg');
+    background-repeat:no-repeat;
+    background-size: cover;
+}
+
+.Login-content .errorMessage {
+    position: absolute;
+    color:rgb(32, 31, 31);
+    font-size:130%;
+    margin-left:2%;
+}
+
+.Login-content .forgot {
+    color:rgb(32, 31, 31);
+    margin-left:28%;
+}
+
+.Login-content .forgot:hover {
+    text-decoration: none;
+    color:rgb(243, 239, 239);
+}
+
+.Login-content .message-forgot{
+    color:rgb(32, 31, 31);
+}
