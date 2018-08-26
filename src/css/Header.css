@@ -10,3 +10,18 @@
     float:right;
     margin-right: 9%;
 }
+
+.header .btn {
+    margin-right: 10px;
+}
+
+.header .btn-success {
+    background: #3ec93c;
+
+}
+
+.header .menu {
+    margin-left: 9%;
+}
+
+

@@ -1,7 +1,7 @@
 import React, {Component} from 'react';
 import { Button} from 'reactstrap';
 import PropTypes from 'prop-types';
-import '../../css/UserRow.css';
+
 
 export default class UserRow extends Component {
     static propTypes = {
@@ -18,6 +18,14 @@ export default class UserRow extends Component {
                 return 'User';
             default:
                 return 'Unknown'
+        }
+    };
+
+    _showStatus = status => {
+        switch (status) {
+            case 0 : return 'Inactive';
+            case 1 : return 'Active';
+            default: return 'Unknown';
         }
     };
 
@@ -44,9 +52,10 @@ export default class UserRow extends Component {
                         <td>{user.name}</td>
                         <td>{user.email}</td>
                         <td>{this._showRole(user.role_id)}</td>
+                        <td>{this._showStatus(user.status)}</td>
                         <td>
                             <Button color="secondary" size="sm" onClick={() => this._edit(user)}>Edit</Button>
-                            <Button color="danger"  size="sm" onClick={() => this._deleteRow(user)}>Delete</Button>                    
+                            <Button color="danger"  size="sm" onClick={() => this._deleteRow(user.id)}>Delete</Button>
                         </td>
                     </tr>
                 </tbody>

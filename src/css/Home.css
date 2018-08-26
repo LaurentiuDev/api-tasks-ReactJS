@@ -21,3 +21,9 @@
   text-decoration: none;
   color:rgb(45, 207, 212);
 }
+
+ .home-text {
+   font-size:120%;
+   text-align: center;
+   color:#fff;
+}

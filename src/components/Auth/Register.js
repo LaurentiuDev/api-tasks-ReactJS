@@ -68,7 +68,7 @@ export default class Register extends Component {
                     <Input type={'text'} name={'name'} value={name} onChange={this._onChange} placeholder="Name" required/> <br/>
                     <Input type={'text'} name={'email'} value={email} onChange={this._onChange} placeholder="Email" required/> <br/>
                     <Input type={'password'} name={'password'} value={password} onChange={this._onChange} placeholder="Password" required/><br/>
-                    <Button  color="primary" onClick={this._register}>Register</Button><Link className="forgot" to={'/forgot-password'}>Forgot password</Link><br/><br/>
+                    <Button  color="primary" onClick={this._register}>Register</Button>
                     <span className="errorMessage">{message}</span>
                 </Form>
             </div>

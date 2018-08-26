@@ -9,6 +9,10 @@
    box-shadow: 4px 4px 5px rgba(0, 0, 0, 0.15);
 }
 
+.layout .content .btn-success:hover {
+   background: green;
+}
+
 .layout .content .btn-secondary{
     box-shadow: 4px 4px 5px rgba(0, 0, 0, 0.15);
     margin-right: 7px;
@@ -19,22 +23,62 @@
  }
 
 .layout .header .btn {
-    box-shadow: 3px 3px 5px rgba(247, 239, 239, 0.15);
+    box-shadow: 4px 4px 5px rgba(0, 0, 0, 0.2);
 }
 
+.layout .load-more {
+    cursor:pointer;
+
+}
+
+.layout .container {
+    max-width: 1400px;
+}
+
+.errorMessage {
+    margin-left:5%;
+    position:absolute;
+    margin-top:100%;
+
+
+}
+
+.errorMessageComment {
+    position:absolute;
+    margin-left: 5%;
+    margin-top:30%;
+}
+
+
+
 table {
-  width: 1100px;
+  width: 1400px;
   border-collapse: collapse;
   overflow: hidden;
   box-shadow: 0 0 20px rgba(0, 0, 0, 0.1);
 }
 th,
 td {
-  padding: 17px 37px;
+  max-width: 30px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  padding: 17px 20px;
   background-color: rgba(255, 255, 255, 0.15);
   color: rgb(12, 11, 11);
   
 }
+td:first-child {
+    width: 10px;
+}
+
+td:hover:not(:first-child):not(:last-child) {
+    text-overflow: clip;
+    white-space: normal;
+    word-break: break-word;
+}
+
+
 th {
   text-align: left;
 }
@@ -46,14 +90,4 @@ tbody tr:hover {
 }
 tbody td {
   position: relative;
-}
-tbody td:hover:before {
-  content: "";
-  position: absolute;
-  left: 0;
-  right: 0;
-  top: -9999px;
-  bottom: -9999px;
-  background-color: rgba(255, 255, 255, 0.2);
-  z-index: -1;
 }

@@ -38,7 +38,7 @@ export default class Login extends Component {
     if (response && response.data && response.data.data) {
       sessionStorage.setItem("token", response.data.data.jwt);
       sessionStorage.setItem("role_id",response.data.data.user.role_id);
-      this.props.history.push("/users");
+      this.props.history.push("/");
     } else {
       this.setState({
         message:response.data.errorMessage
@@ -49,7 +49,7 @@ export default class Login extends Component {
   render() {
     const { email, password , message } = this.state;
     if(sessionStorage.getItem("token")){
-        return <Redirect to={'/users'}/>;
+        return <Redirect to={'/'}/>;
     }
 
     return (
@@ -79,6 +79,7 @@ export default class Login extends Component {
           <Button color="primary" onClick={this._login}>
             Login
           </Button>
+            <Link className="forgot" to={'/forgot-password'}>Forgot password</Link><br/><br/>
           <span className="errorMessage">{message}</span>
         </Form>
       </div>

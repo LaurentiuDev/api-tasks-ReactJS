@@ -26,6 +26,8 @@ body {
     background-image:url('../images/bg-01.jpg');
     background-repeat:no-repeat;
     background-size: cover;
+    background-attachment: fixed;
+
 }
 
 .Login-content .errorMessage {

@@ -26,10 +26,10 @@ export default class Layout extends Component {
             <div className={'layout'}>
                 <Header/>
                 
-                { sessionStorage.getItem('role_id') === '1' ? //Just admin can see users table
+                {
                 <Container className={'content'}>
                     {this.props.children}
-                </Container> : null
+                </Container>
                 }
                 <Footer/>
             </div>

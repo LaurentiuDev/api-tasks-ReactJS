@@ -2,7 +2,7 @@ import React, {Component} from 'react';
 import axios from 'axios';
 import UserRow from "./UserRow";
 import Layout from '../Misc/Layout';
-import '../../css/Users.css';
+import '../../css/Layout.css';
 import PropTypes from 'prop-types';
 
 import {ModalFooter, Button, Modal, ModalHeader, ModalBody, FormGroup, Form, Label, Input} from 'reactstrap';
@@ -16,8 +16,11 @@ export default class Users extends Component {
         name: '',
         email: '',
         password: '',
+        status:'',
         role: '',
-        shouldRerender: false
+        shouldRerender: false,
+        errorMessage:'',
+        openUserDeleteModal:false
     };
     static  propTypes = {
         users:PropTypes.array,
@@ -31,22 +34,31 @@ export default class Users extends Component {
     };
 
     async componentDidMount() {
-        let users = await axios.get('http://api.tasks.local/v1/admin/users');
+        let users = await axios.get(process.env.REACT_APP_API_URL + 'admin/users').catch(e=>{
+            this.setState({
+                shouldRerender:true
+            });
+        });
 
-        this.setState({users: users.data.data});
+        if(users && users.data && users.data.data) {
+            this.setState({users: users.data.data});
+        }
     }
 
     async componentDidUpdate() {
         if (this.state.shouldRerender) {
-            let users = await axios.get('http://api.tasks.local/v1/admin/users');
+            let users = await axios.get(process.env.REACT_APP_API_URL+ 'admin/users');
 
-            this.setState({users: users.data.data, shouldRerender: false});
+            if(users && users.data && users.data.data) {
+                this.setState({users: users.data.data, shouldRerender: false});
+            }
         }
     }
 
     _toggle = () => {
         this.setState({
-            open: !this.state.open
+            open: !this.state.open,
+            errorMessage:''
         });
     };
 
@@ -56,17 +68,43 @@ export default class Users extends Component {
         this.setState({
             [name]: value
         });
+
+        try {
+            const {name, email, password, status, role, id} = this.state;
+
+            if((!name || !email || !password || !status || !role) && !id) {
+                this.setState({
+                    errorMessage: 'Please fill all fields'
+                });
+            }else {
+                this.setState({
+                    errorMessage: ''
+                });
+            }
+        }catch (e) {
+            console.log(e);
+        }
+
     };
 
     _userAction = async () => {
-        const {name, email, password, role, id} = this.state;
+        const {name, email, password,status, role, id} = this.state;
 
         const data = {
-            name, email
+            name, email , status
         };
 
         if (role !== '') {
             data.role = role;
+        }
+        if((!name || !email || !password || !status || !role) && !id) {
+            this.setState({
+                errorMessage: 'Please fill all fields'
+            });
+        }else {
+            this.setState({
+                errorMessage: ''
+            });
         }
 
         let res;
@@ -92,6 +130,8 @@ export default class Users extends Component {
             id: false,
             name: '',
             email: '',
+            password:'',
+            status:'',
             role: '',
             open: true
         });
@@ -102,27 +142,82 @@ export default class Users extends Component {
             id: user.id,
             name: user.name,
             email: user.email,
+            status:user.status,
             role: user.role_id,
             open: true
         });
     };
 
-    _deleteRow = async (user) => {
+    _deleteRow = async () => {
+        const {id} =this.state;
+        console.log(id);
         let res;
-        if(user.id){
-            res = await axios.delete(process.env.REACT_APP_API_URL + `admin/user/${user.id}`);
+        if(id){
+            res = await axios.delete(process.env.REACT_APP_API_URL + `admin/user/${id}`);
         }
 
         if (res && res.data && res.data.responseType === 'success') {
             this.setState({
                 shouldRerender: true,
+                openUserDeleteModal:false
             });
         }
+    };
+
+    _loadNextTasks = async () => {
+        const {page} = this.state;
+
+        let response = await axios.get(process.env.REACT_APP_API_URL + `admin/users?page=${(page + 1)}`);
+
+        this.setState({
+            users: {
+                ...response.data.data, data: [
+                    ...this.state.users.data,
+                    ...response.data.data.data
+                ]
+            },
+            page: response.data.data.current_page
+        });
+    };
+
+    componentWillUnmount(){
+        this.setState({
+            shouldRerender:false
+        });
     }
 
+    _toggleUserDeteleModal = (id) => {
+        this.setState({
+            id:id,
+            openUserDeleteModal: !this.state.openUserDeleteModal
+        });
+    };
+
     render() {
-        const {users, id} = this.state;
-       
+        const {users, id , errorMessage,openUserDeleteModal} = this.state;
+
+        let content = '',userMapRow='';
+        try{
+            if(users.current_page < users.last_page){
+                content = <div className="load-more" onClick={this._loadNextTasks}>Load more</div>;
+            }
+
+            userMapRow = users.data.map((user, key) => {
+                return <UserRow key={key} user={user} edit={this._edit} deleteRow={this._toggleUserDeteleModal}/>
+            });
+
+
+
+        }catch (e) {
+            if(userMapRow === undefined || content ===undefined)  {
+                this.setState({
+                    shouldRerender: true
+                });
+            }
+        }
+
+
+
         return (
             <Layout>
                 <Button  color="success" onClick={this._add}>Add user</Button>
@@ -137,7 +232,7 @@ export default class Users extends Component {
                                        id="name"
                                        placeholder="Name"
                                        value={this.state.name}
-                                       onChange={this._onChange}/>
+                                       onChange={this._onChange} required="required"/>
                             </FormGroup>
                             <FormGroup>
                                 <Label for="email">Email</Label>
@@ -157,8 +252,22 @@ export default class Users extends Component {
                                        value={this.state.password}
                                        onChange={this._onChange}/>
                             </FormGroup>}
+
                             <FormGroup>
-                                <Label for="role">Select</Label>
+                                <Label for="status">Status</Label>
+                                <Input type="select"
+                                       name="status"
+                                       id="status"
+                                       onChange={this._onChange}
+                                       value={this.state.status}>
+                                    <option value={''}>Select</option>
+                                    <option value={0}>Inactive</option>
+                                    <option value={1}>Active</option>
+                                </Input>
+                            </FormGroup>
+
+                            <FormGroup>
+                                <Label for="role">Role</Label>
                                 <Input type="select"
                                        name="role"
                                        id="role"
@@ -171,11 +280,24 @@ export default class Users extends Component {
                             </FormGroup>
                         </Form>
                     </ModalBody>
+                    <span className={'errorMessage'}>{errorMessage}</span>
                     <ModalFooter>
                         <Button color="primary" onClick={this._userAction}>{id ? 'Edit user' : 'Add user'}</Button>
                         <Button color="secondary" onClick={this._toggle}>Cancel</Button>
                     </ModalFooter>
                 </Modal>
+
+                <Modal isOpen={openUserDeleteModal} toggle={this._toggleUserDeteleModal}>
+                    <ModalBody>
+                        <p>Are you sure you want to delete this task?</p>
+                    </ModalBody>
+
+                    <ModalFooter>
+                        <Button color={'primary'} size={'sm'} onClick={() => this._deleteRow()}>Delete</Button>
+                        <Button color={'danger'} size={'sm'} onClick={() => this._toggleUserDeteleModal(false)}>Cancel</Button>
+                    </ModalFooter>
+                </Modal>
+
                 <div className={'users-list'}>
                 <table>
                     <thead>
@@ -184,14 +306,23 @@ export default class Users extends Component {
                             <th>Name</th>
                             <th>Email</th>
                             <th>Role</th>
+                            <th>Status</th>
                             <th>Action</th>
                         </tr>
                     </thead>
-                    {users && users.map((user, key) => {
-                        return <UserRow key={key} user={user} edit={this._edit} deleteRow={this._deleteRow}/>
-                    })}
+                    {userMapRow}
                 </table>
                 </div>
+                <br></br>
+                {content}
+                <br></br>
+                <br></br>
+                <br></br>
+                <br></br>
+                <br></br>
+                <br></br>
+                <br></br>
+                <br></br>
             </Layout>
         )
     }
