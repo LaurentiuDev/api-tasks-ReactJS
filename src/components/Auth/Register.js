@@ -61,7 +61,7 @@ export default class Register extends Component {
         }
         return (
             <div className="Login-content">
-                <Link className="btn btn-secondary" to={'/'}>Home</Link>
+                <Link className="btn btn-secondary" to={'/login'}>Login</Link>
                 <p className="title">Create account</p>
                
                 <Form>
@@ -69,7 +69,7 @@ export default class Register extends Component {
                     <Input type={'text'} name={'email'} value={email} onChange={this._onChange} placeholder="Email" required/> <br/>
                     <Input type={'password'} name={'password'} value={password} onChange={this._onChange} placeholder="Password" required/><br/>
                     <Button  color="primary" onClick={this._register}>Register</Button>
-                    <span className="errorMessage">{message}</span>
+                    <span className="errorMessageRegister">{message}</span>
                 </Form>
             </div>
         )

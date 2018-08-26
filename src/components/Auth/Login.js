@@ -41,7 +41,7 @@ export default class Login extends Component {
       this.props.history.push("/");
     } else {
       this.setState({
-        message:response.data.errorMessage
+        message:'Please fill all required filds'
       });
     }
   };
@@ -51,11 +51,11 @@ export default class Login extends Component {
     if(sessionStorage.getItem("token")){
         return <Redirect to={'/'}/>;
     }
-
+    console.log(message);
     return (
       <div className="Login-content">
-        <Link className="btn btn-secondary" to={"/"}>
-          Home
+        <Link className="btn btn-secondary" to={"/register"}>
+          Register
         </Link>
         <p className="title">Login</p>
 
@@ -80,7 +80,7 @@ export default class Login extends Component {
             Login
           </Button>
             <Link className="forgot" to={'/forgot-password'}>Forgot password</Link><br/><br/>
-          <span className="errorMessage">{message}</span>
+          <span className="errorMessageLogin">{message}</span>
         </Form>
       </div>
     );

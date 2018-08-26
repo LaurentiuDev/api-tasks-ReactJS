@@ -205,7 +205,8 @@ export default class Tasks extends Component {
         this.setState({
             id:id,
             comment:'',
-            openCommentModal:true
+            openCommentModal:true,
+            errorMessage:''
         });
     };
 
