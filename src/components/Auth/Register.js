@@ -49,7 +49,7 @@ export default class Register extends Component {
                 console.log('Error to registration.');
             });
        
-    }
+    };
 
     render() {
         const {name,email, password,success,message} = this.state;

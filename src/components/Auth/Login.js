@@ -51,7 +51,7 @@ export default class Login extends Component {
     if(sessionStorage.getItem("token")){
         return <Redirect to={'/'}/>;
     }
-    console.log(message);
+
     return (
       <div className="Login-content">
         <Link className="btn btn-secondary" to={"/register"}>

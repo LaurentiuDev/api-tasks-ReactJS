@@ -141,6 +141,7 @@ export default class Tasks extends Component {
             name: task.name,
             description: task.description,
             assign: task.assign,
+            status:task.status,
             open: true ,
             errorMessage:''
         });

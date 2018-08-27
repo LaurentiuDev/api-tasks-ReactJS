@@ -70,7 +70,7 @@ export  default  class Logs extends Component {
                 <tr>
                     <td>{log.id}</td>
                     <td>{log.task_id}</td>
-                    <td>{log.type}</td>
+                    <td>{log.type === 1 ? "STATUS" : "ASSIGN"}</td>
                     <td>{log.old_value}</td>
                     <td>{log.new_value}</td>
                 </tr>
