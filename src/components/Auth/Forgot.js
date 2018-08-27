@@ -57,20 +57,26 @@ export default class Forgot extends Component {
 
     _forgot = async () => {
         const {email} = this.state;
-        await axios.post(process.env.REACT_APP_API_URL + 'forgot-password',{email})
-        .then(res => {
-           
-            if(res.data.errorMessage){
-                this.setState({
-                    showCode:false,
-                    message:res.data.errorMessage
+        if(email ) {
+            await axios.post(process.env.REACT_APP_API_URL + 'forgot-password', {email})
+                .then(res => {
+
+                    if (res.data.errorMessage) {
+                        this.setState({
+                            showCode: false,
+                            message: res.data.errorMessage
+                        });
+                    } else {
+                        this.setState({showCode: true});
+                    }
+                }).catch(error => {
+                    console.log(error);
                 });
-            } else {
-                this.setState({showCode:true});
-            }
-        }).catch(error => {
-            console.log(error);
-        });
+        }else {
+            this.setState({
+                message:'Please fill email field'
+            });
+        }
     };
 
     _renderMain() {
@@ -84,7 +90,7 @@ export default class Forgot extends Component {
                 <Form>
                     <Input type={'email'} name={'email'} value={email} onChange={this._onChange} placeholder="Email"/> <br/>
                         <Button  color="primary" onClick={ this._forgot}>Reset</Button>
-                    <span className="errorMessage">{message}</span>
+                    <span className="errorMessageEmailForgot">{message}</span>
                 </Form>
             </Fragment>
         );
@@ -102,7 +108,7 @@ export default class Forgot extends Component {
                     <Input type={'text'} name={'code'} value={code} onChange={this._onChange} placeholder="Code"/> <br/>
                     <Input type={'password'} name={'password'} value={password} onChange={this._onChange} placeholder="Password"/> <br/>
                     <Button  color="primary" onClick={ this._changePassword}>Reset</Button>
-                    <span className="errorMessage">{message}</span>
+                    <span className="errorMessageEmailForgot">{message}</span>
                 </Form>
             </Fragment>
         );

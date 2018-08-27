@@ -42,7 +42,10 @@ body {
     color:#fff;
     font-size:120%;
 }
-
+.Login-content .errorMessageEmailForgot {
+    color:white;
+    padding-left: 20px;
+}
 .Login-content .errorMessageRegister{
     position:absolute;
     color:#fff;

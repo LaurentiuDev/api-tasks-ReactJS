@@ -4,6 +4,7 @@ import UserRow from "./UserRow";
 import Layout from '../Misc/Layout';
 import '../../css/Layout.css';
 import PropTypes from 'prop-types';
+import { Pagination, PaginationItem, PaginationLink } from 'reactstrap';
 
 import {ModalFooter, Button, Modal, ModalHeader, ModalBody, FormGroup, Form, Label, Input} from 'reactstrap';
 
@@ -164,18 +165,25 @@ export default class Users extends Component {
         }
     };
 
-    _loadNextTasks = async () => {
+    _loadNextUsers = async () => {
+        const {page , users} = this.state;
+        if (users.current_page < users.last_page) {
+            let response = await axios.get(process.env.REACT_APP_API_URL + `admin/users?page=${(page + 1)}`);
+
+            this.setState({
+                users: response.data.data,
+                page: response.data.data.current_page
+            });
+        }
+    };
+
+    _loadPreviousUsers = async () => {
         const {page} = this.state;
 
-        let response = await axios.get(process.env.REACT_APP_API_URL + `admin/users?page=${(page + 1)}`);
+        let response = await axios.get(process.env.REACT_APP_API_URL + `admin/users?page=${(page -1 )}`);
 
         this.setState({
-            users: {
-                ...response.data.data, data: [
-                    ...this.state.users.data,
-                    ...response.data.data.data
-                ]
-            },
+            users: response.data.data,
             page: response.data.data.current_page
         });
     };
@@ -197,13 +205,24 @@ export default class Users extends Component {
         const {users, id , errorMessage,openUserDeleteModal} = this.state;
 
         let content = '',userMapRow='';
+        let first ='' ,last ='' ,currentPage;
         try{
-            if(users.current_page < users.last_page){
-                content = <div className="load-more" onClick={this._loadNextTasks}>Load more</div>;
+            if(users.current_page) {
+                currentPage = <PaginationLink>{users.current_page} </PaginationLink>;
+            } else {
+                currentPage = null;
             }
+            first =      <PaginationItem onClick={this._loadPreviousUsers}>
+                <PaginationLink previous/>
+            </PaginationItem>;
+
+
+            last = <PaginationItem onClick={this._loadNextUsers}>
+                <PaginationLink next  />
+            </PaginationItem>;
 
             userMapRow = users.data.map((user, key) => {
-                return <UserRow key={key} user={user} edit={this._edit} deleteRow={this._toggleUserDeteleModal}/>
+                return <UserRow key={key} count={key} user={user} edit={this._edit} deleteRow={this._toggleUserDeteleModal}/>
             });
 
 
@@ -297,7 +316,12 @@ export default class Users extends Component {
                         <Button color={'danger'} size={'sm'} onClick={() => this._toggleUserDeteleModal(false)}>Cancel</Button>
                     </ModalFooter>
                 </Modal>
-
+                <br></br><br></br>
+                <Pagination  aria-label="Page navigation example">
+                    {first}
+                    {currentPage}
+                    {last}
+                </Pagination>
                 <div className={'users-list'}>
                 <table>
                     <thead>
@@ -314,7 +338,7 @@ export default class Users extends Component {
                 </table>
                 </div>
                 <br></br>
-                {content}
+
                 <br></br>
                 <br></br>
                 <br></br>

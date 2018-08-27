@@ -1,6 +1,7 @@
 import React , {Component} from 'react';
 import Layout from '../Misc/Layout';
 import axios from "axios/index";
+import { Pagination, PaginationItem, PaginationLink } from 'reactstrap';
 
 export  default  class Logs extends Component {
     state = {
@@ -34,18 +35,26 @@ export  default  class Logs extends Component {
         }
     }
 
-    _loadNextTasks = async () => {
+
+    _loadNextLogs = async () => {
+        const {page , logs} = this.state;
+        if (logs.current_page < logs.last_page) {
+            let response = await axios.get(process.env.REACT_APP_API_URL + `logs?page=${(page + 1)}`);
+
+            this.setState({
+                logs: response.data.data,
+                page: response.data.data.current_page
+            });
+        }
+    };
+
+    _loadPreviousLogs = async () => {
         const {page} = this.state;
 
-        let response = await axios.get(process.env.REACT_APP_API_URL + `logs?page=${(page + 1)}`);
+        let response = await axios.get(process.env.REACT_APP_API_URL + `logs?page=${(page -1 )}`);
 
         this.setState({
-            logs: {
-                ...response.data.data, data: [
-                    ...this.state.logs.data,
-                    ...response.data.data.data
-                ]
-            },
+            logs: response.data.data,
             page: response.data.data.current_page
         });
     };
@@ -59,16 +68,28 @@ export  default  class Logs extends Component {
     render () {
         const {logs} = this.state;
 
-        let content = '',logsMapRow='';
+        let logsMapRow='';
+        let first ='' ,last ='' ,currentPage;
         try{
-            if(logs.current_page < logs.last_page){
-                content = <div className="load-more" onClick={this._loadNextTasks}>Load more</div>;
+
+            if(logs.current_page) {
+                currentPage = <PaginationLink>{logs.current_page} </PaginationLink>;
+            } else {
+                currentPage = null;
             }
+            first =      <PaginationItem onClick={this._loadPreviousLogs}>
+                <PaginationLink previous/>
+            </PaginationItem>;
+
+
+            last = <PaginationItem onClick={this._loadNextLogs}>
+                <PaginationLink next  />
+            </PaginationItem>;
 
             logsMapRow = logs.data.map((log, key) => {
                 return <tbody key={key}>
                 <tr>
-                    <td>{log.id}</td>
+                    <td>{key+1}</td>
                     <td>{log.task_id}</td>
                     <td>{log.type === 1 ? "STATUS" : "ASSIGN"}</td>
                     <td>{log.old_value}</td>
@@ -89,6 +110,12 @@ export  default  class Logs extends Component {
 
         return (
             <Layout>
+
+                <Pagination  aria-label="Page navigation example">
+                    {first}
+                    {currentPage}
+                    {last}
+                </Pagination>
                 <div className={'users-list'}>
                     <table>
                         <thead>
@@ -105,7 +132,7 @@ export  default  class Logs extends Component {
                     </table>
                 </div>
                 <br></br>
-                {content}
+
                 <br></br>
                 <br></br>
                 <br></br>

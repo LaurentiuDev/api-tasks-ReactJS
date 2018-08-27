@@ -4,6 +4,7 @@ import PropTypes from 'prop-types';
 
 
 export default class UserRow extends Component {
+
     static propTypes = {
         user: PropTypes.object.isRequired,
         edit: PropTypes.func.isRequired,
@@ -48,7 +49,7 @@ export default class UserRow extends Component {
             <React.Fragment>
                 <tbody>
                     <tr>
-                        <td>{user.id}</td>
+                        <td>{this.props.count +1}</td>
                         <td>{user.name}</td>
                         <td>{user.email}</td>
                         <td>{this._showRole(user.role_id)}</td>

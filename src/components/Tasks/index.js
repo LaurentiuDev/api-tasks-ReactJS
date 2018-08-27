@@ -2,7 +2,7 @@ import React, {Component} from 'react';
 import Layout from "../Misc/Layout";
 import axios from "axios";
 import {ModalFooter, Button, Modal, ModalHeader, ModalBody, FormGroup, Form, Label, Input} from 'reactstrap';
-
+import { Pagination, PaginationItem, PaginationLink } from 'reactstrap';
 
 
 export default class Tasks extends Component {
@@ -82,17 +82,24 @@ export default class Tasks extends Component {
     }
 
     _loadNextTasks = async () => {
+        const {page , tasks} = this.state;
+        if (tasks.current_page < tasks.last_page) {
+            let response = await axios.get(process.env.REACT_APP_API_URL + `tasks?page=${(page + 1)}`);
+
+            this.setState({
+                tasks: response.data.data,
+                page: response.data.data.current_page
+            });
+        }
+    };
+
+    _loadPreviousTasks = async () => {
         const {page} = this.state;
 
-        let response = await axios.get(process.env.REACT_APP_API_URL + `tasks?page=${(page + 1)}`);
+        let response = await axios.get(process.env.REACT_APP_API_URL + `tasks?page=${(page -1 )}`);
 
         this.setState({
-            tasks: {
-                ...response.data.data, data: [
-                    ...this.state.tasks.data,
-                    ...response.data.data.data
-                ]
-            },
+            tasks: response.data.data,
             page: response.data.data.current_page
         });
     };
@@ -263,12 +270,23 @@ export default class Tasks extends Component {
 
     render() {
         const {tasks, users,comments, name, description,status, assign, open, id,openCommentModal,comment,openTaskDeleteModal,errorMessage} = this.state;
-        let content ='' , contentTasks='';
+        let first ='' , contentTasks='',last ='' ,currentPage ;
 
         try {
-            if (tasks.current_page < tasks.last_page) {
-                 content = (<div className="load-more" onClick={this._loadNextTasks}>Load more</div>);
+            if(tasks.current_page) {
+                currentPage = <PaginationLink>{tasks.current_page} </PaginationLink>;
+            } else {
+                currentPage = null;
             }
+            first = <PaginationItem onClick={this._loadPreviousTasks}>
+                         <PaginationLink previous/>
+                     </PaginationItem>;
+
+
+             last = <PaginationItem onClick={this._loadNextTasks}>
+                        <PaginationLink next  />
+                    </PaginationItem>;
+
 
             contentTasks = tasks && tasks.data && tasks.data.map((task, key) => {
                 return <tbody key={key}>
@@ -395,6 +413,11 @@ export default class Tasks extends Component {
                 <Button  color="success" onClick={this._add}>Add task</Button>
                 <br></br>
                 <br></br>
+                <Pagination  aria-label="Page navigation example">
+                    {first}
+                    {currentPage}
+                    {last}
+                </Pagination>
                 <div className="tasks-list">
                     <table>
                         <thead>
@@ -413,7 +436,7 @@ export default class Tasks extends Component {
                     </table>
                 </div>
                 <br></br>
-                {content}
+
                 <br></br>
                 <br></br>
                 <br></br>
